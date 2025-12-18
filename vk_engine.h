@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vk_types.h"
+#include <VkBootstrap.h>
 
 class VulkanEngine {
 public:
@@ -10,6 +11,13 @@ public:
 	VkPhysicalDevice _chosenGPU;// GPU chosen as the default device
 	VkDevice _device; // Vulkan device for commands
 	VkSurfaceKHR _surface;// Vulkan window surface
+
+	VkSwapchainKHR _swapchain;
+	VkFormat _swapchainImageFormat;
+
+	std::vector<VkImage> _swapchainImages;
+	std::vector<VkImageView> _swapchainImageViews;
+	VkExtent2D _swapchainExtent;
 
 	bool _isInitialized{ false };
 	int _frameNumber {0};
@@ -34,8 +42,11 @@ public:
 
 private:
 
-	void init_vulkan();
+	VkSurfaceKHR create_surface_glfw();
+	int init_device();
 	void init_swapchain();
 	void init_commands();
 	void init_sync_structures();
+	void create_swapchain(uint32_t width, uint32_t height);
+	void destroy_swapchain();
 };
