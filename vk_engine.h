@@ -2,12 +2,15 @@
 
 #include "vk_types.h"
 #include <VkBootstrap.h>
+#include "vk_initializers.cpp"
+#include "vk_images.cpp"
 
 struct FrameData
 {
-
 	VkCommandPool _commandPool;
 	VkCommandBuffer _mainCommandBuffer;
+	VkSemaphore _swapchainSemaphore, _renderSemaphore;
+	VkFence _renderFence;
 };
 
 constexpr unsigned int FRAME_OVERLAP = 2;
