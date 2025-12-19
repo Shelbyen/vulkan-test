@@ -14,6 +14,7 @@
 #include <vulkan/vk_enum_string_helper.h>
 // #include <vk_mem_alloc.h>
 
+#define FMT_HEADER_ONLY
 #include <fmt/core.h>
 
 #include <glm/mat4x4.hpp>
