@@ -3,14 +3,23 @@
 #include "vk_types.h"
 #include <VkBootstrap.h>
 
-class VulkanEngine {
-public:
+struct FrameData
+{
 
-	VkInstance _instance;// Vulkan library handle
-	VkDebugUtilsMessengerEXT _debug_messenger;// Vulkan debug output handle
-	VkPhysicalDevice _chosenGPU;// GPU chosen as the default device
-	VkDevice _device; // Vulkan device for commands
-	VkSurfaceKHR _surface;// Vulkan window surface
+	VkCommandPool _commandPool;
+	VkCommandBuffer _mainCommandBuffer;
+};
+
+constexpr unsigned int FRAME_OVERLAP = 2;
+
+class VulkanEngine
+{
+public:
+	VkInstance _instance;					   // Vulkan library handle
+	VkDebugUtilsMessengerEXT _debug_messenger; // Vulkan debug output handle
+	VkPhysicalDevice _chosenGPU;			   // GPU chosen as the default device
+	VkDevice _device;						   // Vulkan device for commands
+	VkSurfaceKHR _surface;					   // Vulkan window surface
 
 	VkSwapchainKHR _swapchain;
 	VkFormat _swapchainImageFormat;
@@ -19,29 +28,35 @@ public:
 	std::vector<VkImageView> _swapchainImageViews;
 	VkExtent2D _swapchainExtent;
 
-	bool _isInitialized{ false };
-	int _frameNumber {0};
-	bool stop_rendering{ false };
-	VkExtent2D _windowExtent{ 1700 , 900 };
+	FrameData _frames[FRAME_OVERLAP];
 
-	GLFWwindow* _window;
+	FrameData& get_current_frame() { return _frames[_frameNumber % FRAME_OVERLAP]; };
 
-	static VulkanEngine& Get();
+	VkQueue _graphicsQueue;
+	uint32_t _graphicsQueueFamily;
 
-	//initializes everything in the engine
+	bool _isInitialized{false};
+	int _frameNumber{0};
+	bool stop_rendering{false};
+	VkExtent2D _windowExtent{1700, 900};
+
+	GLFWwindow *_window;
+
+	static VulkanEngine &Get();
+
+	// initializes everything in the engine
 	void init();
 
-	//shuts down the engine
+	// shuts down the engine
 	void cleanup();
 
-	//draw loop
+	// draw loop
 	void draw();
 
-	//run main loop
+	// run main loop
 	void run();
 
 private:
-
 	VkSurfaceKHR create_surface_glfw();
 	int init_device();
 	void init_swapchain();
